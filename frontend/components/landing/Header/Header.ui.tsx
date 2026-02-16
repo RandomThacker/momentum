@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { APP_NAME } from "@/lib/brand";
 import { LINKS, NAV_LINKS } from "@/lib/constants";
-import { container, logo, buttonVariants } from "@/lib/design-system";
+import { container, logo } from "@/lib/design-system";
 import { Logo } from "@/components/ui/Logo";
 import { SCROLL_THRESHOLD } from "./Header.logic";
 
@@ -28,7 +28,7 @@ export const Header = () => {
             <div className={container}>
                 <div className="flex h-20 items-center justify-between">
                     <a href="/" className="flex items-center gap-3 group">
-                        <Logo />
+                        <Logo className={logo.sizeDefault} />
                         <span className={logo.text}>{APP_NAME}</span>
                     </a>
 
@@ -37,26 +37,28 @@ export const Header = () => {
                             <a
                                 key={link.name}
                                 href={link.href}
-                                className={buttonVariants.ghost}
+                                className="text-sm font-medium text-text-muted transition-colors hover:text-primary"
                             >
                                 {link.name}
                             </a>
                         ))}
                     </nav>
 
-                    <div className="hidden md:flex items-center">
+                    <div className="hidden md:flex items-center gap-4">
                         <a
                             href={LINKS.signIn}
-                            className={buttonVariants.primarySm}
+                            className="text-sm font-medium text-text-muted transition-colors hover:text-primary"
                         >
                             Sign in
-                            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                            </svg>
+                        </a>
+                        <a
+                            href={LINKS.signIn}
+                            className="btn-primary rounded-full bg-gradient-to-r from-primary to-primary-light px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-primary/25"
+                        >
+                            Get Started Free
                         </a>
                     </div>
 
-                    {/* Mobile Menu Button */}
                     <button
                         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                         className="md:hidden p-2 text-text-muted"
@@ -71,7 +73,6 @@ export const Header = () => {
                     </button>
                 </div>
 
-                {/* Mobile Menu */}
                 {isMobileMenuOpen && (
                     <div className="md:hidden py-4 border-t border-gray-100">
                         <nav className="flex flex-col gap-4">
@@ -79,17 +80,20 @@ export const Header = () => {
                                 <a
                                     key={link.name}
                                     href={link.href}
-                                    className={buttonVariants.ghost}
+                                    className="text-sm font-medium text-text-muted transition-colors hover:text-primary"
                                 >
                                     {link.name}
                                 </a>
                             ))}
                             <div className="flex flex-col gap-3 pt-4 border-t border-gray-100">
+                                <a href={LINKS.signIn} className="text-sm font-medium text-text-muted">
+                                    Sign in
+                                </a>
                                 <a
                                     href={LINKS.signIn}
-                                    className={`${buttonVariants.primarySm} text-center`}
+                                    className="rounded-full bg-gradient-to-r from-primary to-primary-light px-6 py-2.5 text-sm font-semibold text-white text-center"
                                 >
-                                    Sign in
+                                    Get Started Free
                                 </a>
                             </div>
                         </nav>
