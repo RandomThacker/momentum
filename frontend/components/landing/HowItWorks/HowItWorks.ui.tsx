@@ -1,4 +1,5 @@
 import { howItWorksContent } from "./HowItWorks.logic";
+import { LINKS } from "@/lib/constants";
 import { container, sectionPadding, typography, buttons } from "@/lib/design-system";
 
 const stepIcons = [
@@ -71,7 +72,7 @@ export const HowItWorks = () => {
 
                 <div className="mt-16 text-center">
                     <a
-                        href="/signin"
+                        href={LINKS.signIn}
                         className={`${buttons.primary} inline-flex items-center gap-2`}
                     >
                         Sign in

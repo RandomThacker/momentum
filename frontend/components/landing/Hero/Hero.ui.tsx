@@ -1,5 +1,6 @@
 import { heroContent } from "./Hero.logic";
-import { container, badge, typography, animationDelays } from "@/lib/design-system";
+import { LINKS } from "@/lib/constants";
+import { container, typography, animationDelays, colors } from "@/lib/design-system";
 
 export const Hero = () => {
     return (
@@ -13,27 +14,19 @@ export const Hero = () => {
 
             <div className={`relative ${container} pt-32 pb-20 lg:pt-40 lg:pb-32`}>
                 <div className="text-center">
-                    <div className={`${badge.primary} mb-8 animate-fade-in-up`}>
+                    <div className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 mb-8 animate-fade-in-up">
                         <span className="relative flex h-2 w-2">
-                            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75"></span>
-                            <span className="relative inline-flex h-2 w-2 rounded-full bg-primary"></span>
+                            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-white opacity-75"></span>
+                            <span className="relative inline-flex h-2 w-2 rounded-full bg-white"></span>
                         </span>
-                        <span className={badge.primaryText}>Now in Early Access</span>
+                        <span className="text-sm font-medium text-white">Now in Early Access</span>
                     </div>
 
                     <h1 className={`mx-auto max-w-5xl text-5xl font-extrabold tracking-tight text-dark sm:text-6xl lg:text-7xl xl:text-8xl animate-fade-in-up ${animationDelays[100]}`}>
                         {heroContent.headline.part1}{" "}
                         <span className="relative inline-block">
-                            <span className="text-gradient">{heroContent.headline.part2}</span>
-                            <svg className="absolute -bottom-2 left-0 w-full h-3" viewBox="0 0 200 12" preserveAspectRatio="none">
-                                <path d="M0 9c50-8 100-8 150-2s50 4 50 4" stroke="url(#underline-gradient)" strokeWidth="4" fill="none" strokeLinecap="round"/>
-                                <defs>
-                                    <linearGradient id="underline-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                                        <stop offset="0%" stopColor="#2563EB"/>
-                                        <stop offset="100%" stopColor="#FBBF24"/>
-                                    </linearGradient>
-                                </defs>
-                            </svg>
+                            <span className="text-primary">{heroContent.headline.part2}</span>
+                            <span className="absolute -bottom-2 left-0 w-full h-1 rounded-full" style={{ backgroundColor: colors.yellow }} />
                         </span>
                     </h1>
 
@@ -41,50 +34,20 @@ export const Hero = () => {
                         {heroContent.supportiveLine}
                     </p>
 
-                    <div className={`mt-12 flex flex-col items-center justify-center gap-4 sm:flex-row animate-fade-in-up ${animationDelays[300]}`}>
+                    <div className={`mt-12 animate-fade-in-up ${animationDelays[300]}`}>
                         <a
-                            href="/signin"
-                            className="btn-primary group flex items-center gap-2 rounded-full bg-gradient-to-r from-primary to-primary-light px-8 py-4 text-lg font-semibold text-white shadow-xl shadow-primary/25 transition-all hover:shadow-2xl hover:shadow-primary/30 hover:scale-105"
+                            href={LINKS.signIn}
+                            className="btn-primary group inline-flex items-center gap-2 rounded-full px-8 py-4 text-lg font-semibold text-white shadow-xl shadow-primary/25 transition-all hover:shadow-2xl hover:shadow-primary/30 hover:scale-105"
+                            style={{ backgroundColor: colors.primary }}
                         >
                             {heroContent.ctaText}
                             <svg className="h-5 w-5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                             </svg>
                         </a>
-                        <button className="group flex items-center gap-2 rounded-full border-2 border-gray-200 bg-white px-8 py-4 text-lg font-semibold text-dark transition-all hover:border-primary/30 hover:bg-gray-50">
-                            <svg className="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                            Watch Demo
-                        </button>
                     </div>
 
-                    <div className={`mt-16 animate-fade-in-up ${animationDelays[400]}`}>
-                        <p className="text-sm text-text-muted mb-6">Trusted by 500+ creators and teams</p>
-                        <div className="flex flex-wrap items-center justify-center gap-6">
-                            <div className="flex -space-x-3">
-                                {['bg-blue-500', 'bg-green-500', 'bg-purple-500', 'bg-orange-500', 'bg-pink-500'].map((color, i) => (
-                                    <div key={i} className={`h-12 w-12 rounded-full ${color} border-3 border-white flex items-center justify-center text-white font-bold shadow-lg`}>
-                                        {String.fromCharCode(65 + i)}
-                                    </div>
-                                ))}
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <div className="flex">
-                                    {[...Array(5)].map((_, i) => (
-                                        <svg key={i} className="h-5 w-5 text-accent" fill="currentColor" viewBox="0 0 20 20">
-                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                        </svg>
-                                    ))}
-                                </div>
-                                <span className="text-sm font-medium text-dark">4.9/5</span>
-                                <span className="text-sm text-text-muted">from 200+ reviews</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className={`mt-20 animate-fade-in-up ${animationDelays[500]}`}>
+                    <div className={`mt-20 animate-fade-in-up ${animationDelays[400]}`}>
                         <div className="relative mx-auto max-w-5xl">
                             <div className="absolute -inset-4 rounded-3xl bg-gradient-to-r from-primary/20 via-accent/20 to-primary/20 blur-2xl opacity-50" />
                             <div className="relative rounded-2xl border border-gray-200 bg-white p-2 shadow-2xl">
@@ -122,25 +85,32 @@ export const Hero = () => {
                                             </div>
                                         </div>
                                         <div className="grid grid-cols-7 gap-2">
-                                            {[...Array(7)].map((_, i) => (
+                                            {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((d, i) => (
                                                 <div key={i} className="text-center text-xs text-text-muted py-1">
-                                                    {['S', 'M', 'T', 'W', 'T', 'F', 'S'][i]}
+                                                    {d}
                                                 </div>
                                             ))}
-                                            {[...Array(35)].map((_, i) => (
-                                                <div
-                                                    key={i}
-                                                    className={`aspect-square rounded-lg flex items-center justify-center text-sm ${
-                                                        [5, 12, 15, 19, 22, 26, 30].includes(i)
-                                                            ? 'bg-primary text-white'
-                                                            : [8, 17, 24].includes(i)
-                                                            ? 'bg-accent text-dark'
-                                                            : 'bg-gray-50 text-text-muted'
-                                                    }`}
-                                                >
-                                                    {i + 1}
-                                                </div>
+                                            {/* Empty cells so month starts on Tuesday (Sun, Mon blank) */}
+                                            {[0, 1].map((i) => (
+                                                <div key={`empty-${i}`} className="aspect-square rounded-lg bg-transparent" />
                                             ))}
+                                            {[...Array(31)].map((_, i) => {
+                                                const day = i + 1;
+                                                return (
+                                                    <div
+                                                        key={i}
+                                                        className={`aspect-square rounded-lg flex items-center justify-center text-sm ${
+                                                            [5, 12, 15, 19, 22, 26, 30].includes(day)
+                                                                ? 'bg-primary text-white'
+                                                                : [8, 17, 24].includes(day)
+                                                                ? 'bg-accent text-dark'
+                                                                : 'bg-gray-50 text-text-muted'
+                                                        }`}
+                                                    >
+                                                        {day}
+                                                    </div>
+                                                );
+                                            })}
                                         </div>
                                     </div>
                                 </div>

@@ -1,17 +1,20 @@
-import { logo } from "@/lib/design-system";
+import { logo, colors } from "@/lib/design-system";
 
 type LogoProps = {
   className?: string;
 };
 
-/** App logo: blue rounded square with a tint of yellow, lightning bolt with subtle yellow. Use in Header, Footer, dashboard. */
+/** App logo: blue-to-yellow gradient (ffcd10), white-outlined lightning bolt. Use in Header, Footer, dashboard. */
 export function Logo({ className }: LogoProps) {
   return (
     <div
-      className={`flex items-center justify-center rounded-xl bg-gradient-to-br from-primary via-primary-light to-accent shadow-lg shadow-primary/25 transition-transform group-hover:scale-105 ring-1 ring-accent/20 ${className ?? logo.sizeDefault}`}
+      className={`flex items-center justify-center rounded-xl shadow-lg shadow-primary/25 transition-transform group-hover:scale-105 ${className ?? logo.sizeDefault}`}
+      style={{
+        background: `linear-gradient(135deg, ${colors.primary} 0%, ${colors.primaryLight} 38%, ${colors.primaryLight} 50%, ${colors.yellow} 100%)`,
+      }}
     >
       <svg
-        className="h-[55%] w-[55%] text-white drop-shadow-[0_0_6px_rgba(251,191,36,0.4)]"
+        className="h-[55%] w-[55%] text-white"
         fill="none"
         viewBox="0 0 24 24"
         stroke="currentColor"
