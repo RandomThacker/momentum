@@ -4,7 +4,7 @@
  * Logo mark and styles: use @/components/ui/Logo and the `logo` tokens from @/lib/design-system.
  */
 
-export const APP_NAME = "Momentum";
+export const APP_NAME = "PostOrbit";
 export const TAGLINE = "Your content, on autopilot.";
 
 /** Short line under the hero headline. */
