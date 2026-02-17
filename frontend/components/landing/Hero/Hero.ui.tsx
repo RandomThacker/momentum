@@ -1,8 +1,11 @@
+"use client";
+
 import { heroContent } from "./Hero.logic";
-import { LINKS } from "@/lib/constants";
 import { container, typography, animationDelays, colors } from "@/lib/design-system";
+import { useSignInModal } from "@/context/SignInModalContext";
 
 export const Hero = () => {
+    const { openSignInModal } = useSignInModal();
     return (
         <section className="relative min-h-screen overflow-hidden bg-gradient-to-b from-blue-50 via-white to-white">
             <div className="absolute inset-0 overflow-hidden">
@@ -35,8 +38,9 @@ export const Hero = () => {
                     </p>
 
                     <div className={`mt-12 animate-fade-in-up ${animationDelays[300]}`}>
-                        <a
-                            href={LINKS.signIn}
+                        <button
+                            type="button"
+                            onClick={openSignInModal}
                             className="btn-primary group inline-flex items-center gap-2 rounded-full px-8 py-4 text-lg font-semibold text-white shadow-xl shadow-primary/25 transition-all hover:shadow-2xl hover:shadow-primary/30 hover:scale-105"
                             style={{ backgroundColor: colors.primary }}
                         >
@@ -44,7 +48,7 @@ export const Hero = () => {
                             <svg className="h-5 w-5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                             </svg>
-                        </a>
+                        </button>
                     </div>
 
                     <div className={`mt-20 animate-fade-in-up ${animationDelays[400]}`}>

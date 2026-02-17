@@ -1,12 +1,15 @@
+"use client";
+
 import { ctaContent } from "./CTA.logic";
-import { LINKS } from "@/lib/constants";
 import { container, containerNarrow, sectionPadding, colors, radius } from "@/lib/design-system";
+import { useSignInModal } from "@/context/SignInModalContext";
 
 /** Subtle cross/plus pattern for blue CTA background */
 const blueCrossPattern =
   "bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2260%22%20height%3D%2260%22%20viewBox%3D%220%200%2060%2060%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cg%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%3Cg%20fill%3D%22%23ffffff%22%20fill-opacity%3D%220.06%22%3E%3Cpath%20d%3D%22M36%2034v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6%2034v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6%204V0H4v4H0v2h4v4h2V6h4V4H6z%22%2F%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E')]";
 
 export const CTA = () => {
+    const { openSignInModal } = useSignInModal();
     return (
         <section id="pricing" className={`relative ${sectionPadding} bg-white overflow-hidden`}>
             <div className="absolute inset-0">
@@ -35,8 +38,9 @@ export const CTA = () => {
                             </p>
 
                             <div className="mx-auto max-w-lg">
-                                <a
-                                    href={LINKS.signIn}
+                                <button
+                                    type="button"
+                                    onClick={openSignInModal}
                                     className="btn-primary inline-flex items-center justify-center gap-2 rounded-full px-8 py-4 text-lg font-bold text-dark transition-all hover:scale-105"
                                     style={{ backgroundColor: colors.yellow }}
                                 >
@@ -44,7 +48,7 @@ export const CTA = () => {
                                     <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                                     </svg>
-                                </a>
+                                </button>
                             </div>
 
                             <div className="mt-12 flex flex-wrap items-center justify-center gap-6 text-blue-100">

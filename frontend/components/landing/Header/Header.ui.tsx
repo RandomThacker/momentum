@@ -2,14 +2,16 @@
 
 import { useState, useEffect } from "react";
 import { APP_NAME } from "@/lib/brand";
-import { LINKS, NAV_LINKS } from "@/lib/constants";
+import { NAV_LINKS } from "@/lib/constants";
 import { container, logo } from "@/lib/design-system";
 import { Logo } from "@/components/ui/Logo";
+import { useSignInModal } from "@/context/SignInModalContext";
 import { SCROLL_THRESHOLD } from "./Header.logic";
 
 export const Header = () => {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const { openSignInModal } = useSignInModal();
 
     useEffect(() => {
         const handleScroll = () => setIsScrolled(window.scrollY > SCROLL_THRESHOLD);
@@ -45,15 +47,16 @@ export const Header = () => {
                     </nav>
 
                     <div className="hidden md:flex items-center">
-                        <a
-                            href={LINKS.signIn}
+                        <button
+                            type="button"
+                            onClick={openSignInModal}
                             className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-primary/25 transition-all hover:bg-primary-dark"
                         >
                             Sign in
                             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                             </svg>
-                        </a>
+                        </button>
                     </div>
 
                     <button
@@ -83,15 +86,19 @@ export const Header = () => {
                                 </a>
                             ))}
                             <div className="flex flex-col gap-3 pt-4 border-t border-gray-100">
-                                <a
-                                    href={LINKS.signIn}
-                                    className="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-6 py-2.5 text-sm font-semibold text-white"
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        setIsMobileMenuOpen(false);
+                                        openSignInModal();
+                                    }}
+                                    className="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-6 py-2.5 text-sm font-semibold text-white w-full"
                                 >
                                     Sign in
                                     <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                                     </svg>
-                                </a>
+                                </button>
                             </div>
                         </nav>
                     </div>

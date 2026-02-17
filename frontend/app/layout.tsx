@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { PAGE_TITLE, PAGE_DESCRIPTION } from "@/lib/brand";
+import { ClientProviders } from "@/components/providers/ClientProviders";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -20,7 +21,7 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
       </head>
       <body className="font-sans antialiased">
-        {children}
+        <ClientProviders>{children}</ClientProviders>
       </body>
     </html>
   );

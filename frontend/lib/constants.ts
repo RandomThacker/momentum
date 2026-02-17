@@ -3,7 +3,9 @@ export { APP_NAME, TAGLINE } from "./brand";
 
 export const LINKS = {
     getStarted: "#",
-    signIn: "/signin",
+    /** Opens sign-in modal on home page */
+    signIn: "/?openSignIn=1",
+    signUp: "/?openSignIn=1",
 };
 
 /** Shared nav links for Header and Footer. Keep single source of truth. */
