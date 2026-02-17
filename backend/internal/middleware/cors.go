@@ -3,6 +3,7 @@ package middleware
 import (
 	"strings"
 
+	"github.com/aryanthacker/momentum/backend/internal/constants"
 	"github.com/gin-gonic/gin"
 )
 
@@ -10,20 +11,20 @@ import (
 func CORS(allowedOrigins []string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		origin := c.Request.Header.Get("Origin")
-		allowOrigin := ""
+		allowOrigin := constants.Empty
 
 		for _, o := range allowedOrigins {
-			if o == "*" {
-				allowOrigin = "*"
+			if o == constants.CORSAllowAll {
+				allowOrigin = constants.CORSAllowAll
 				break
 			}
-			if origin != "" && strings.EqualFold(o, origin) {
+			if origin != constants.Empty && strings.EqualFold(o, origin) {
 				allowOrigin = origin
 				break
 			}
 		}
 
-		if allowOrigin != "" {
+		if allowOrigin != constants.Empty {
 			c.Writer.Header().Set("Access-Control-Allow-Origin", allowOrigin)
 		}
 		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")

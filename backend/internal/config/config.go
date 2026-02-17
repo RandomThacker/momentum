@@ -1,8 +1,12 @@
 package config
 
 import (
+	"log"
 	"os"
 	"strings"
+
+	"github.com/aryanthacker/momentum/backend/internal/constants"
+	"github.com/joho/godotenv"
 )
 
 // Config holds all configuration for the application (12-factor: env only)
@@ -46,32 +50,52 @@ type GoogleConfig struct {
 
 var cfg *Config
 
-// Load initializes the configuration from environment variables
+// LoadLocal loads only .env.local (single source for local). No .env is loaded so commenting a var in .env.local means it is missing.
+func LoadLocal() *Config {
+	_ = godotenv.Load(constants.EnvFileLocal)
+	return load()
+}
+
+// LoadProduction loads only .env.production (single source for production). No .env is loaded.
+func LoadProduction() *Config {
+	_ = godotenv.Load(constants.EnvFileProduction)
+	return load()
+}
+
+// Load initializes the configuration from environment variables only (no defaults).
+// Call LoadLocal() or LoadProduction() instead so the correct env file is loaded first.
 func Load() *Config {
 	if cfg != nil {
 		return cfg
 	}
+	return load()
+}
 
+// load builds Config from current environment (no env file loading).
+func load() *Config {
+	if cfg != nil {
+		return cfg
+	}
 	cfg = &Config{
 		Server: ServerConfig{
-			Port: getEnv("SERVER_PORT", getEnv("PORT", "8080")),
-			Mode: getEnv("GIN_MODE", "debug"),
+			Port: getEnv(constants.EnvServerPort, getEnv(constants.EnvPort, constants.Empty)),
+			Mode: getEnv(constants.EnvGinMode, constants.Empty),
 		},
 		Database: DatabaseConfig{
-			URL: getEnv("DB_URL", "postgres://localhost:5432/momentum_dev?sslmode=disable"),
+			URL: mustGetEnv(constants.EnvDBURL),
 		},
 		App: AppConfig{
-			Name:    getEnv("APP_NAME", "Momentum"),
-			Env:     getEnv("APP_ENV", "development"),
-			BaseURL: getEnv("APP_BASE_URL", ""),
+			Name:    getEnv(constants.EnvAppName, constants.Empty),
+			Env:     getEnv(constants.EnvAppEnv, constants.Empty),
+			BaseURL: getEnv(constants.EnvAppBaseURL, constants.Empty),
 		},
 		CORS: CORSConfig{
-			AllowedOrigins: parseCORSOrigins(getEnv("CORS_ALLOWED_ORIGINS", "*")),
+			AllowedOrigins: parseCORSOrigins(getEnv(constants.EnvCORSOrigins, constants.Empty)),
 		},
 		Google: GoogleConfig{
-			ClientID:     getEnv("GOOGLE_CLIENT_ID", ""),
-			ClientSecret: getEnv("GOOGLE_CLIENT_SECRET", ""),
-			RedirectURL:  getEnv("GOOGLE_REDIRECT_URL", ""),
+			ClientID:     getEnv(constants.EnvGoogleClientID, constants.Empty),
+			ClientSecret: getEnv(constants.EnvGoogleClientSecret, constants.Empty),
+			RedirectURL:  getEnv(constants.EnvGoogleRedirectURL, constants.Empty),
 		},
 	}
 
@@ -94,18 +118,27 @@ func getEnv(key string, fallback string) string {
 	return fallback
 }
 
-// parseCORSOrigins splits a comma-separated string, trims each part; if empty returns ["*"]
+// mustGetEnv returns the environment variable value or exits with log.Fatal if missing or empty
+func mustGetEnv(key string) string {
+	value, exists := os.LookupEnv(key)
+	if !exists || strings.TrimSpace(value) == constants.Empty {
+		log.Fatalf("Missing required environment variable: %s", key)
+	}
+	return value
+}
+
+// parseCORSOrigins splits a comma-separated string and trims each part; empty env yields empty slice
 func parseCORSOrigins(value string) []string {
+	if value == constants.Empty {
+		return nil
+	}
 	parts := strings.Split(value, ",")
 	origins := make([]string, 0, len(parts))
 	for _, p := range parts {
 		trimmed := strings.TrimSpace(p)
-		if trimmed != "" {
+		if trimmed != constants.Empty {
 			origins = append(origins, trimmed)
 		}
-	}
-	if len(origins) == 0 {
-		return []string{"*"}
 	}
 	return origins
 }

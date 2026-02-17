@@ -2,20 +2,25 @@ package main
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/aryanthacker/momentum/backend/internal/config"
+	"github.com/aryanthacker/momentum/backend/internal/constants"
 	"github.com/aryanthacker/momentum/backend/internal/database"
 	"github.com/aryanthacker/momentum/backend/internal/models"
 	"github.com/aryanthacker/momentum/backend/internal/routes"
 	"github.com/aryanthacker/momentum/backend/utils/logger"
 	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
 )
 
 func main() {
-	_ = godotenv.Load()
-
-	cfg := config.Load()
+	// Use APP_ENV from shell (e.g. export APP_ENV=production). No .env loaded here so .env.local / .env.production are the only sources.
+	var cfg *config.Config
+	if os.Getenv(constants.EnvAppEnv) == constants.EnvValueProduction {
+		cfg = config.LoadProduction()
+	} else {
+		cfg = config.LoadLocal()
+	}
 	logger.Init(cfg.App.Env)
 	logger.Infof("Starting %s in %s mode", cfg.App.Name, cfg.App.Env)
 
