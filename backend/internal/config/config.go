@@ -3,6 +3,7 @@ package config
 import (
 	"log"
 	"os"
+	"strconv"
 	"strings"
 
 	"github.com/aryanthacker/momentum/backend/internal/constants"
@@ -16,6 +17,7 @@ type Config struct {
 	App      AppConfig
 	CORS     CORSConfig
 	Google   GoogleConfig
+	Auth     AuthConfig
 }
 
 // ServerConfig holds server-related configuration
@@ -46,6 +48,16 @@ type GoogleConfig struct {
 	ClientID     string
 	ClientSecret string
 	RedirectURL  string
+}
+
+// AuthConfig holds auth and cookie settings.
+type AuthConfig struct {
+	DashboardURL      string
+	CookieDomain      string
+	CookieSecure      bool
+	CookieSameSite    string
+	TokenCookieName   string
+	TokenMaxAgeSecond int
 }
 
 var cfg *Config
@@ -97,6 +109,14 @@ func load() *Config {
 			ClientSecret: getEnv(constants.EnvGoogleClientSecret, constants.Empty),
 			RedirectURL:  getEnv(constants.EnvGoogleRedirectURL, constants.Empty),
 		},
+		Auth: AuthConfig{
+			DashboardURL:      getEnv(constants.EnvFrontendDashboardURL, buildDashboardURL(getEnv(constants.EnvAppBaseURL, constants.Empty))),
+			CookieDomain:      getEnv(constants.EnvAuthCookieDomain, constants.Empty),
+			CookieSecure:      getEnvAsBool(constants.EnvAuthCookieSecure, getEnv(constants.EnvAppEnv, constants.Empty) == constants.EnvValueProduction),
+			CookieSameSite:    getEnv(constants.EnvAuthCookieSameSite, "Lax"),
+			TokenCookieName:   getEnv(constants.EnvAuthTokenCookieName, "auth_token"),
+			TokenMaxAgeSecond: getEnvAsInt(constants.EnvAuthTokenCookieMaxAgeSeconds, 24*60*60),
+		},
 	}
 
 	return cfg
@@ -141,4 +161,36 @@ func parseCORSOrigins(value string) []string {
 		}
 	}
 	return origins
+}
+
+func getEnvAsBool(key string, fallback bool) bool {
+	value, exists := os.LookupEnv(key)
+	if !exists {
+		return fallback
+	}
+	parsed, err := strconv.ParseBool(strings.TrimSpace(value))
+	if err != nil {
+		return fallback
+	}
+	return parsed
+}
+
+func getEnvAsInt(key string, fallback int) int {
+	value, exists := os.LookupEnv(key)
+	if !exists {
+		return fallback
+	}
+	parsed, err := strconv.Atoi(strings.TrimSpace(value))
+	if err != nil {
+		return fallback
+	}
+	return parsed
+}
+
+func buildDashboardURL(baseURL string) string {
+	baseURL = strings.TrimSpace(baseURL)
+	if baseURL == constants.Empty {
+		return "/dashboard"
+	}
+	return strings.TrimRight(baseURL, "/") + "/dashboard"
 }

@@ -19,4 +19,8 @@ const (
 	// Env file names (for local vs production config)
 	EnvFileLocal      = ".env.local"
 	EnvFileProduction = ".env.production"
+
+	// Auth providers and user status
+	ProviderGoogle = "google"
+	StatusActive   = "ACTIVE"
 )

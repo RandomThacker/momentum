@@ -41,3 +41,21 @@ func (r *UserRepository) FindByEmail(email string) (*models.User, error) {
 	}
 	return &user, nil
 }
+
+// FindByProviderAndProviderID returns a user by provider and provider_id or nil if not found
+func (r *UserRepository) FindByProviderAndProviderID(provider, providerID string) (*models.User, error) {
+	var user models.User
+	err := r.db.Where("provider = ? AND provider_id = ?", provider, providerID).First(&user).Error
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, nil
+		}
+		return nil, err
+	}
+	return &user, nil
+}
+
+// Create inserts a new user
+func (r *UserRepository) Create(user *models.User) error {
+	return r.db.Create(user).Error
+}
