@@ -2,85 +2,40 @@ package main
 
 import (
 	"fmt"
-	"log"
 
-	"github.com/aryanthacker/momentum/backend/api"
-	"github.com/aryanthacker/momentum/backend/utils/configs"
+	"github.com/aryanthacker/momentum/backend/internal/config"
+	"github.com/aryanthacker/momentum/backend/internal/database"
+	"github.com/aryanthacker/momentum/backend/internal/models"
+	"github.com/aryanthacker/momentum/backend/internal/routes"
 	"github.com/aryanthacker/momentum/backend/utils/logger"
 	"github.com/gin-gonic/gin"
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
+	"github.com/joho/godotenv"
 )
 
 func main() {
-	// Load configuration
-	config := configs.Load()
+	_ = godotenv.Load()
 
-	// Initialize logger
-	logger.Init(config.App.Environment)
-	logger.Infof("Starting %s in %s mode", config.App.Name, config.App.Environment)
+	cfg := config.Load()
+	logger.Init(cfg.App.Env)
+	logger.Infof("Starting %s in %s mode", cfg.App.Name, cfg.App.Env)
 
-	// Set Gin mode
-	gin.SetMode(config.Server.Mode)
-
-	// Initialize database
-	db, err := initDatabase(config)
+	db, err := database.NewPostgres(cfg)
 	if err != nil {
 		logger.Fatal("Failed to connect to database", err)
 	}
-	logger.Info("Database connection established")
 
-	// Create Gin engine
+	if err := db.AutoMigrate(&models.User{}); err != nil {
+		logger.Fatal("Failed to auto-migrate User model", err)
+	}
+
+	gin.SetMode(cfg.Server.Mode)
 	engine := gin.New()
+	routes.Setup(engine, cfg, db)
 
-	// Setup routes
-	router := api.NewRouter(config, db)
-	router.Setup(engine)
-
-	// Start server
-	addr := fmt.Sprintf(":%s", config.Server.Port)
+	addr := fmt.Sprintf(":%s", cfg.Server.Port)
 	logger.Infof("Server starting on %s", addr)
 
 	if err := engine.Run(addr); err != nil {
 		logger.Fatal("Failed to start server", err)
 	}
-}
-
-func initDatabase(config *configs.Config) (*gorm.DB, error) {
-	dsn := fmt.Sprintf(
-		"host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
-		config.Database.Host,
-		config.Database.Port,
-		config.Database.User,
-		config.Database.Password,
-		config.Database.DBName,
-		config.Database.SSLMode,
-	)
-
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
-	if err != nil {
-		return nil, err
-	}
-
-	// Auto-migrate models (optional, can be disabled in production)
-	// Import models and run migrations here if needed
-	// Example: db.AutoMigrate(&models.User{})
-
-	sqlDB, err := db.DB()
-	if err != nil {
-		return nil, err
-	}
-
-	// Set connection pool settings
-	sqlDB.SetMaxIdleConns(10)
-	sqlDB.SetMaxOpenConns(100)
-
-	// Test connection
-	if err := sqlDB.Ping(); err != nil {
-		log.Printf("Warning: Database ping failed: %v", err)
-		// Don't return error here, allow the app to start
-		// The database might become available later
-	}
-
-	return db, nil
 }
